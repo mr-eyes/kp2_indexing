@@ -1,0 +1,3 @@
+[submodule "lib/kProcessor"]
+	path = lib/kProcessor
+	url = git@github.com:dib-lab/kProcessor.git

@@ -255,15 +255,29 @@ void index_bins(string bins_dir, int kSize, kDataFrame* frame) {
 
 }
 
+inline uint64_t to_uint64_t(std::string const& value) {
+  uint64_t result = 0;
+  char const* p = value.c_str();
+  char const* q = p + value.size();
+  while (p < q) {
+    result *= 10;
+    result += *(p++) - '0';
+  }
+  return result;
+}
 
 int main(int argc, char** argv) {
+    if(argc < 5){
+        throw "args: <bins_dir> <kSize> <output_prefix> <initial_reserve_size>\n";
+    }
     string bins_dir = argv[1];
     int kSize = stoi(argv[2]);
     string output_prefix = argv[3];
+    uint64_t reserve_size = to_uint64_t(argv[4]);
 
 
     auto* kf = kDataFrameFactory::createPHMAP(31, 100000);
-    kf->reserve(1000000000);
+    kf->reserve(reserve_size);
     index_bins(bins_dir, kSize, kf);
     kf->save(output_prefix);
 }

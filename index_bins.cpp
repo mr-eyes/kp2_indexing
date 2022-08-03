@@ -276,8 +276,7 @@ int main(int argc, char** argv) {
     uint64_t reserve_size = to_uint64_t(argv[4]);
 
 
-    auto* kf = kDataFrameFactory::createPHMAP(31, 100000);
-    kf->reserve(reserve_size);
+    auto* kf = kDataFrameFactory::createPHMAP(kSize, reserve_size);
     index_bins(bins_dir, kSize, kf);
     kf->save(output_prefix);
 }

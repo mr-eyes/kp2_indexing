@@ -56,7 +56,7 @@ inline std::vector<std::string> glob2(const std::string& pattern) {
     return filenames;
 }
 
-void index_bins(string bins_dir, int kSize, kDataFrame* frame) {
+void index_bins(string bins_dir, int kSize, kDataFrame* frame, uint64_t legend_size) {
 
 
 
@@ -66,6 +66,7 @@ void index_bins(string bins_dir, int kSize, kDataFrame* frame) {
     flat_hash_map<string, uint64_t> tagsMap;
     flat_hash_map<string, uint64_t> groupNameMap;
     auto* legend = new flat_hash_map<uint64_t, std::vector<uint32_t>>();
+    legend->reserve(legend_size);
     flat_hash_map<uint64_t, uint64_t> colorsCount;
     uint64_t readID = 0, groupID = 1;
     priority_queue<uint64_t, vector<uint64_t>, std::greater<uint64_t>> freeColors;
@@ -267,16 +268,17 @@ inline uint64_t to_uint64_t(std::string const& value) {
 }
 
 int main(int argc, char** argv) {
-    if(argc < 5){
-        throw "args: <bins_dir> <kSize> <output_prefix> <initial_reserve_size>\n";
+    if(argc < 6){
+        throw "args: <bins_dir> <kSize> <output_prefix> <initial_reserve_size> <legend_reserve>\n";
     }
     string bins_dir = argv[1];
     int kSize = stoi(argv[2]);
     string output_prefix = argv[3];
     uint64_t reserve_size = to_uint64_t(argv[4]);
+    uint64_t legend_reserve = to_uint64_t(argv[5]);
 
 
     auto* kf = kDataFrameFactory::createPHMAP(kSize, reserve_size);
-    index_bins(bins_dir, kSize, kf);
+    index_bins(bins_dir, kSize, kf, legend_reserve);
     kf->save(output_prefix);
 }
